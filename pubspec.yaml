@@ -23,7 +23,6 @@ flutter:
     platforms:
       ios:
         pluginClass: RutubeWebviewPlugin
-        dartPluginClass: RutubeWebview
       android:
         package: com.example.rutube_webview
         pluginClass: RutubeWebviewPlugin
