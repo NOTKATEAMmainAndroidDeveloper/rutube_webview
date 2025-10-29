@@ -1,15 +1,47 @@
 # rutube_webview
 
-A new Flutter plugin project.
+**Flutter-плагин для интеграции RuTube WebView с поддержкой полноэкранного видео, смены ориентации и инъекции JavaScript для Android и iOS.**
 
-## Getting Started
+## Использование
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/to/develop-plugins),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+Простой пример использования:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```dart 
+import 'package:rutube_webview/rutube_webview.dart';
 
+RutubeWebview(
+  url: 'https://rutube.ru/play/embed/123456',
+  onFullScreenChange: (controller, isFullscreen) {
+    print('Fullscreen: $isFullscreen');
+  },
+  onFullScreenChangeStart: (controller, isFullscreen) async {
+    return true;
+  },
+  onPageFinished: (controller) {
+    print('Страница загружена!');
+  },
+)
+```
+
+## API контроллера
+
+    RutubeWebviewController controller; // Получаете из колбэков выше
+
+    // Смена ориентации
+    await controller.setOrientation(orientation: WebViewOrientation.landscape);
+
+    // Инъекция JavaScript
+    await controller.evaluateJavaScript('alert("Hello from JS!");');
+
+## Параметры
+
+| Параметр                       | Тип                                             | Описание                                |
+|---------------------------------|-------------------------------------------------|-----------------------------------------|
+| url                            | String                                          | URL для загрузки в WebView              |
+| onFullScreenChange             | Function(RutubeWebviewController, bool)         | Событие входа/выхода в fullscreen       |
+| onFullScreenChangeStart        | Future<bool> Function(RutubeWebviewController, bool) | Событие попытки входа/выхода в fullscreen |
+| onPageFinished                 | Function(RutubeWebviewController)               | Событие окончания загрузки              |
+
+## Лицензия
+
+MIT
