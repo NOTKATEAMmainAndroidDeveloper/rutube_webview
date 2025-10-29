@@ -60,7 +60,7 @@ class RutubeWebView: NSObject, FlutterPlatformView {
                 result(true)
 
             case "setOrientationLandscape":
-                self.setOrientation(.landscape)
+                self.setOrientation(.landscapeLeft)
                 result(true)
 
             case "evaluateJavaScript":
@@ -83,16 +83,21 @@ class RutubeWebView: NSObject, FlutterPlatformView {
     }
 
     private func setOrientation(_ orientation: UIInterfaceOrientation) {
-        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
-            return
-        }
+        if #available(iOS 13.0, *) {
+            if #available(iOS 16.0, *) {
+                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+                    return
+                }
 
-        if #available(iOS 16.0, *) {
-            let orientationMask: UIInterfaceOrientationMask = orientation == .portrait ? .portrait : .landscape
-            windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: orientationMask))
+                let orientationMask: UIInterfaceOrientationMask = orientation == .portrait ? .portrait : .landscapeRight
+                windowScene.requestGeometryUpdate(.iOS(interfaceOrientations: orientationMask))
 
-            if let viewController = windowScene.windows.first?.rootViewController {
-                viewController.setNeedsUpdateOfSupportedInterfaceOrientations()
+                if let viewController = windowScene.windows.first?.rootViewController {
+                    viewController.setNeedsUpdateOfSupportedInterfaceOrientations()
+                }
+            } else {
+                UIDevice.current.setValue(orientation.rawValue, forKey: "orientation")
+                UINavigationController.attemptRotationToDeviceOrientation()
             }
         } else {
             UIDevice.current.setValue(orientation.rawValue, forKey: "orientation")
