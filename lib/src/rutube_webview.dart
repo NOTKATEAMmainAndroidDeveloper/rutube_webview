@@ -9,14 +9,21 @@ import 'package:rutube_webview/rutube_webview.dart';
 ///
 /// [url] - ссылка на видео
 ///
-/// [onFullScreenChange] - вызывается при изменении полноэкранного режима
+/// [onFullScreenChange] - вызывается при изменении полноэкранного режима,
 /// возвращает контроллер виджета и значение полноэкранного режима,
 ///
-/// [onFullScreenChangeStart] - вызывается при старте изменения полноэкранного режима
+/// [onFullScreenChangeStart] - вызывается при старте изменения полноэкранного режима,
 /// возвращает контроллер виджета и значение полноэкранного режима, который будет определен
 ///
-/// [onPageFinished] - вызывается при завершении загрузки страницы
+/// [onPageFinished] - вызывается при завершении загрузки страницы,
 /// возвращает контроллер виджета
+///
+/// [onNavigationRequest] - вызывается при запросе навигации,
+/// возвращает контроллер виджета и url, который будет открыт
+///
+/// при возврате false, навигация будет отменена
+///
+/// при возврате true, навигация будет выполнена
 class RutubeWebview extends StatelessWidget {
   const RutubeWebview({
     super.key,
@@ -42,19 +49,23 @@ class RutubeWebview extends StatelessWidget {
         onFullScreenChange: onFullScreenChange,
         onFullScreenChangeStart: onFullScreenChangeStart,
         onPageFinished: onPageFinished,
+        onNavigationRequest: onNavigationRequest,
       ),
       builder:
-          (ctl) => Platform.isAndroid ? AndroidView(
-            key: ValueKey(0),
-            viewType: 'rutube-webview',
-            creationParams: {'initialUrl': url},
-            creationParamsCodec: const StandardMessageCodec(),
-          ) : UiKitView(
-            key: ValueKey(0),
-            viewType: 'rutube-webview',
-            creationParams: {'initialUrl': url},
-            creationParamsCodec: const StandardMessageCodec(),
-          ),
+          (ctl) =>
+              Platform.isAndroid
+                  ? AndroidView(
+                    key: ValueKey(0),
+                    viewType: 'rutube-webview',
+                    creationParams: {'initialUrl': url},
+                    creationParamsCodec: const StandardMessageCodec(),
+                  )
+                  : UiKitView(
+                    key: ValueKey(0),
+                    viewType: 'rutube-webview',
+                    creationParams: {'initialUrl': url},
+                    creationParamsCodec: const StandardMessageCodec(),
+                  ),
     );
   }
 }
