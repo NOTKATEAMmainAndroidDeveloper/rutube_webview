@@ -4,7 +4,7 @@ import 'package:rutube_webview/rutube_webview.dart';
 
 /// Контроллер для работы с виджетом [RutubeWebview]
 class RutubeWebviewController extends GetxController {
-  static const _channel = MethodChannel('rutube_webview_channel_0');
+  MethodChannel? _channel;
   final String url;
 
   final void Function(RutubeWebviewController controller, bool value)? onFullScreenChange;
@@ -20,27 +20,28 @@ class RutubeWebviewController extends GetxController {
     this.onNavigationRequest,
   });
 
-  @override
-  void onInit() {
-    super.onInit();
-    _channel.setMethodCallHandler((call) => _methodHandler(call));
+  void setPlatformViewId(int id) {
+    _channel = MethodChannel('rutube_webview_channel_$id');
+    _channel!.setMethodCallHandler((call) => _methodHandler(call));
   }
 
   /// Устанавливает ориентацию устройства
   Future<void> setOrientation({required WebViewOrientation orientation}) async {
+    if (_channel == null) return;
+
     switch (orientation) {
       case WebViewOrientation.portrait:
-        await _channel.invokeMethod('setOrientationPortrait');
+        await _channel!.invokeMethod('setOrientationPortrait');
         break;
       case WebViewOrientation.landscape:
-        await _channel.invokeMethod('setOrientationLandscape');
+        await _channel!.invokeMethod('setOrientationLandscape');
         break;
     }
   }
 
   /// Выполняет JavaScript-скрипт в WebView
   Future<void> evaluateJavaScript(String javaScript) async =>
-      await _channel.invokeMethod('evaluateJavaScript', javaScript);
+      await _channel!.invokeMethod('evaluateJavaScript', javaScript);
 
   Future<dynamic> _methodHandler(MethodCall call) async {
     if (call.method == 'onFullscreenChanged') {

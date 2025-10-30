@@ -60,12 +60,18 @@ class RutubeWebview extends StatelessWidget {
                     viewType: 'rutube-webview',
                     creationParams: {'initialUrl': url},
                     creationParamsCodec: const StandardMessageCodec(),
+                    onPlatformViewCreated: (id){
+                      ctl.setPlatformViewId(id);
+                    },
                   )
                   : UiKitView(
                     key: ValueKey(0),
                     viewType: 'rutube-webview',
                     creationParams: {'initialUrl': url},
                     creationParamsCodec: const StandardMessageCodec(),
+                    onPlatformViewCreated: (id){
+                      ctl.setPlatformViewId(id);
+                    },
                   ),
     );
   }
