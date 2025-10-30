@@ -43,9 +43,10 @@ class RutubeWebview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
-      global: true,
-      autoRemove: false,
+      global: false,
+      filter: (ctl) => ctl.url,
       init: RutubeWebviewController(
+        url: url,
         onFullScreenChange: onFullScreenChange,
         onFullScreenChangeStart: onFullScreenChangeStart,
         onPageFinished: onPageFinished,

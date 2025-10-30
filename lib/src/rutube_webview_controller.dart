@@ -5,6 +5,7 @@ import 'package:rutube_webview/rutube_webview.dart';
 /// Контроллер для работы с виджетом [RutubeWebview]
 class RutubeWebviewController extends GetxController {
   static const _channel = MethodChannel('rutube_webview_channel_0');
+  final String url;
 
   final void Function(RutubeWebviewController controller, bool value)? onFullScreenChange;
   final Future<bool> Function(RutubeWebviewController controller, bool value)? onFullScreenChangeStart;
@@ -12,6 +13,7 @@ class RutubeWebviewController extends GetxController {
   final Future<bool> Function(RutubeWebviewController controller, String url)? onNavigationRequest;
 
   RutubeWebviewController({
+    required this.url,
     this.onFullScreenChange,
     this.onFullScreenChangeStart,
     this.onPageFinished,
