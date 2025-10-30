@@ -121,15 +121,22 @@ extension RutubeWebView: WKUIDelegate {
 }
 
 extension RutubeWebView: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        methodChannel.invokeMethod("onPageFinished", arguments: true)
-    }
-
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
     ) {
-        decisionHandler(.allow)
+        let url = navigationAction.request.url?.absoluteString ?? ""
+        methodChannel.invokeMethod("onNavigationRequest", url, result: { result in
+            if let allow = result as? Bool, allow {
+                decisionHandler(.allow)
+            } else {
+                decisionHandler(.cancel)
+            }
+        })
+    }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        methodChannel.invokeMethod("onPageFinished", arguments: true)
     }
 }
